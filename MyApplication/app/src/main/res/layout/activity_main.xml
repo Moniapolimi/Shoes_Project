@@ -5,29 +5,104 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <!-- Button to start BLE scan -->
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnScan"
+    <!-- Stato della connessione -->
+    <TextView
+        android:id="@+id/tvStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Scan Devices" />
-
-    <!-- RecyclerView to display the list of devices -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:background="#EEEEEE" />
-
-    <!-- TextView to display data from the selected device -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/tvData"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="#EEEEEE"
         android:padding="8dp"
-        android:text="Data will appear here"
-        android:textSize="16sp" />
+        android:text="Stato: Non connesso"
+        android:textColor="@color/black"
+        android:textSize="18sp" />
+
+    <!-- Dati dei sensori -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/sensor1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 1: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 2: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 3: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 4: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 5: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor6"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 6: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 7: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 8: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor9"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 9: -"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/sensor10"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="Sensore 10: -"
+            android:textSize="16sp" />
+    </LinearLayout>
 
 </LinearLayout>
+
