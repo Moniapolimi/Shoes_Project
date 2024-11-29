@@ -633,11 +633,38 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
+    private var partialData = ByteArray(32) // Buffer per memorizzare i dati completi
+    private var dataReceived = 0 // Conta quanti byte sono stati ricevuti
+
     @SuppressLint("SetTextI18n")
     private fun updateSensorData(data: ByteArray) {
-        val sensorValues = data.asList().chunked(2).map {
-            it[0].toInt() shl 8 or (it[1].toInt() and 0xFF)
+        // Copia i dati ricevuti nel buffer parziale
+        System.arraycopy(data, 0, partialData, dataReceived, data.size)
+        dataReceived += data.size
+
+        // Controlla se tutti i 32 byte sono stati ricevuti
+        if (dataReceived < 32) {
+            Log.d("Bluetooth", "Dati parziali ricevuti: ${dataReceived} byte")
+            return
         }
+
+        // Ripristina il contatore per il prossimo ciclo
+        dataReceived = 0
+
+        // Log dei dati completi ricevuti
+        Log.d("Bluetooth", "Dati ricevuti (completi): ${partialData.joinToString(", ") { it.toString(16) }}")
+
+        // Decodifica i dati
+        val sensorValues = mutableListOf<Int>()
+        for (i in 0 until partialData.size step 4) {
+            val value = partialData[i].toInt() and 0xFF // Solo il primo byte di ogni gruppo di 4
+            sensorValues.add(value)
+        }
+
+        // Log dei valori decodificati
+        Log.d("Bluetooth", "Valori decodificati: $sensorValues")
+
+        // Aggiorna i TextView con i valori FSR
         runOnUiThread {
             sensorValues.forEachIndexed { index, value ->
                 if (index < sensorDataViews.size) {
@@ -646,6 +673,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
+
 }
 
 
