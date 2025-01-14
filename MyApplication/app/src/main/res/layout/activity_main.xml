@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="#F9F9F9"
     android:padding="16dp">
 
     <!-- Stato della connessione -->
@@ -10,99 +12,197 @@
         android:id="@+id/tvStatus"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#EEEEEE"
-        android:padding="8dp"
+        android:background="#FFEB3B"
+        android:padding="16dp"
         android:text="Stato: Non connesso"
-        android:textColor="@color/black"
+        android:textColor="#000000"
+        android:textStyle="bold"
         android:textSize="18sp" />
 
-    <!-- Dati dei sensori -->
+    <!-- Pulsante di connessione -->
+    <Button
+        android:id="@+id/btnConnect"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="#18C81F"
+        android:text="Connetti"
+        android:textColor="#FFFFFF"
+        android:textSize="16sp" />
+
+    <!-- Colonne per i sensori -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingTop="8dp">
+        android:layout_marginTop="16dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/sensor1"
-            android:layout_width="match_parent"
+        <!-- Colonna FSR -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 1: -"
-            android:textSize="16sp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/sensor2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 2: -"
-            android:textSize="16sp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#2196F3"
+                android:padding="8dp"
+                android:text="FSR"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/sensor3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 3: -"
-            android:textSize="16sp" />
+            <!-- Valori FSR -->
+            <TextView
+                android:id="@+id/sensor1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR1: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 4: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR2: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor5"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 5: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR3: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 6: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR4: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor7"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 7: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR5: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor8"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 8: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR6: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor9"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 9: -"
-            android:textSize="16sp" />
+            <TextView
+                android:id="@+id/sensor7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR7: -"
+                android:textSize="16sp" />
 
-        <TextView
-            android:id="@+id/sensor10"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/sensor8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR8: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sensor9"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR9: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/sensor10"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="FSR10: -"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Colonna IMU -->
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="Sensore 10: -"
-            android:textSize="16sp" />
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FF5722"
+                android:padding="8dp"
+                android:text="IMU"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:textSize="18sp" />
+
+            <!-- Valori IMU -->
+            <TextView
+                android:id="@+id/accelX"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Accel X: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/accelY"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Accel Y: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/accelZ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Accel Z: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/gyroX"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Gyro X: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/gyroY"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Gyro Y: -"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/gyroZ"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="Gyro Z: -"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
-
