@@ -4,81 +4,100 @@
 #include <Wire.h>
 
 // Create a new sensor object
-BMI270 imu; // <-- Aggiunta (già presente nel tuo codice originale)
+BMI270 imu; // IMU
 
 // I2C address selection
 uint8_t i2cAddress = BMI2_I2C_PRIM_ADDR; // 0x68
 
-// Pin di selezione del multiplexer
-const int S0 = A4; // Pin per il bit 0
-const int S1 = A5; // Pin per il bit 1
-const int S2 = A6; // Pin per il bit 2
-const int S3 = A8; // Pin per il bit 3 (nuovo per arrivare a 10 canali)
+// Pin di selezione del multiplexer (fino a 8 canali)
+const int S0 = A4; 
+const int S1 = A5;
+const int S2 = A6;
 
 // Ingresso analogico del multiplexer
-const int analogPin = A7;
+const int muxAnalogPin = A7;
+
+// Altri due FSR diretti (senza MUX)
+const int fsr9Pin  = A2; // 9° FSR
+const int fsr10Pin = A3; // 10° FSR
 
 // Variabili per i segnali FSR
-volatile uint16_t fsrValues[10]; // Ora 10 elementi
-volatile int currentChannel = 0; // Canale corrente del multiplexer
-volatile bool dataReady = false; // Flag per indicare che i dati sono pronti
+volatile uint16_t fsrValues[10];  // 10 FSR in totale
+volatile int currentChannel = 0;  
+volatile bool dataReady = false;  
 
 // Dichiarazioni per BLE
-BLEService fsrService = BLEService(0x180A);  // ID del servizio BLE
-BLECharacteristic fsrCharacteristic = BLECharacteristic(0x2A58); // ID caratteristica BLE
+BLEService fsrService = BLEService(0x180A);  
+BLECharacteristic fsrCharacteristic = BLECharacteristic(0x2A58);
 
-// bufferFSR BLE: 10 canali * 2 byte = 20 byte
+// bufferFSR BLE (10 FSR * 2 byte = 20 byte)
 uint8_t bufferFSR[20];
 
 // Timer configurazione
 NRF52Timer ITimer0(NRF_TIMER_1);
 
-// Intervallo timer in microsecondi (esempio: 1 ms = 1000 µs)
+// Intervallo timer (es. 1 ms = 1000 µs)
 #define TIMER_INTERVAL_US 1000
 
-// Funzione gestita dal timer
-void timerISR() {
-  selectChannel(currentChannel);
-  fsrValues[currentChannel] = analogRead(analogPin);
+// Funzione richiamata dal timer
+void timerISR() 
+{
+  if (currentChannel < 8) 
+  {
+    // Selezioniamo il canale sul multiplexer (0-7)
+    selectChannel(currentChannel);
+    fsrValues[currentChannel] = analogRead(muxAnalogPin);
 
-  // Esempio: Aggiunta di un "header" solo sul primo canale
-  if (currentChannel == 0){
-    fsrValues[currentChannel] = fsrValues[currentChannel] | 0xC000;
+    // Aggiunta dell'header (bit 14 e 15 = 1) solo sul primo canale
+    if (currentChannel == 0) {
+      fsrValues[0] |= 0xC000;
+    }
+  }
+  else if (currentChannel == 8) 
+  {
+    // Leggi direttamente da A2
+    fsrValues[8] = analogRead(fsr9Pin);
+  }
+  else if (currentChannel == 9) 
+  {
+    // Leggi direttamente da A3
+    fsrValues[9] = analogRead(fsr10Pin);
   }
 
   currentChannel++;
-  // Ora ci fermiamo a 10 canali
-  if (currentChannel >= 10) {
+  if (currentChannel >= 10) 
+  {
     currentChannel = 0;
     dataReady = true;
   }
 }
 
-void setup() {
-  // Configurazione dei pin digitali per la selezione
-  pinMode(analogPin, INPUT);
+void setup() 
+{
+  // Configurazione pin multiplexer
   pinMode(S0, OUTPUT);
   pinMode(S1, OUTPUT);
   pinMode(S2, OUTPUT);
-  pinMode(S3, OUTPUT); // Nuovo pin di selezione
+  pinMode(muxAnalogPin, INPUT);
 
-  // Configurazione seriale
+  // Configurazione pin analogici aggiuntivi
+  pinMode(fsr9Pin, INPUT);
+  pinMode(fsr10Pin, INPUT);
+
+  // Serial
   Serial.begin(9600);
   Serial.println("Inizializzazione del sistema...");
 
   // Inizializzazione BLE
   Bluefruit.begin();
-  Bluefruit.setTxPower(4);  // Potenza massima
+  Bluefruit.setTxPower(4);  // potenza massima
   Bluefruit.setName("FSR Sensor");
 
   // Configurazione del servizio e caratteristica BLE
   fsrService.begin();
   fsrCharacteristic.setProperties(CHR_PROPS_NOTIFY);
   fsrCharacteristic.setPermission(SECMODE_OPEN, SECMODE_NO_ACCESS);
-
-  // Adattiamo la lunghezza fissa della caratteristica da 16 a 20 byte
-  fsrCharacteristic.setFixedLen(sizeof(bufferFSR));
-
+  fsrCharacteristic.setFixedLen(sizeof(bufferFSR)); // 20 byte
   fsrCharacteristic.begin();
 
   // Avvia advertising BLE
@@ -94,30 +113,29 @@ void setup() {
     Serial.println(F("Errore nella configurazione del timer."));
   }
 
-  // <-- Aggiunta: Inizializzazione IMU
+  // Inizializzazione IMU
   Serial.println("Inizializzazione IMU...");
   Wire.begin();
-
-  // Loop finché l'IMU non è connessa
   while (imu.beginI2C(i2cAddress) != BMI2_OK) {
-    Serial.println("Errore: BMI270 non connesso, controllare il cablaggio e l'indirizzo I2C!");
+    Serial.println("Errore: BMI270 non connesso. Controllare il cablaggio e l'indirizzo I2C!");
     delay(1000);
   }
-
   Serial.println("BMI270 connesso!");
 }
 
-void loop() {
-  if (dataReady) {
-    dataReady = false; // Resetta il flag
+void loop() 
+{
+  if (dataReady) 
+  {
+    dataReady = false; // reset flag
 
-    // Prepara il bufferFSR BLE per i valori FSR
+    // Prepara il buffer BLE
     for (int i = 0; i < 10; i++) {
       bufferFSR[i * 2]     = fsrValues[i] & 0xFF;
       bufferFSR[i * 2 + 1] = (fsrValues[i] >> 8);
     }
 
-    // Debug seriale: stampa i valori (in decimale)
+    // Debug seriale
     Serial.print("Bytes inviati: ");
     for (int i = 0; i < 10; i++) {
       uint16_t value = bufferFSR[i * 2] | (bufferFSR[i * 2 + 1] << 8);
@@ -126,8 +144,9 @@ void loop() {
     }
     Serial.println();
 
-    // Acquisizione dati IMU
+    // Leggi i dati IMU
     imu.getSensorData();
+
     Serial.print("Acceleration in g's\tX: ");
     Serial.print(imu.data.accelX, 3);
     Serial.print("\tY: ");
@@ -147,10 +166,10 @@ void loop() {
   }
 }
 
-// Funzione per selezionare il canale del multiplexer
-void selectChannel(int channel) {
+// Funzione per selezionare il canale del multiplexer (0–7)
+void selectChannel(int channel) 
+{
   digitalWrite(S0, bitRead(channel, 0));
   digitalWrite(S1, bitRead(channel, 1));
   digitalWrite(S2, bitRead(channel, 2));
-  digitalWrite(S3, bitRead(channel, 3)); // Necessario per arrivare fino a 10
 }
